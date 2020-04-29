@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import csv
 from datetime import datetime
 
@@ -50,13 +51,16 @@ def main():
     il = read_interface_line(INTERFACE_NAME)
     traffic_data = parse_if_line(il)
     time_now = datetime.now().isoformat()
+
+    rx = int(traffic_data['RX']['bytes']) / 1024**2
+    tx = int(traffic_data['TX']['bytes']) / 1024**2
+
+    rx = round(rx, 3)
+    tx = round(tx, 3)
+
     with open(OUTPUT_FILE, 'a') as f:
         writer = csv.writer(f, delimiter=',',dialect='excel')
-        writer.writerow([
-            time_now,
-            int(traffic_data['RX']['bytes']) / 1024**2,
-            int(traffic_data['TX']['bytes']) / 1024**2
-        ])
+        writer.writerow([time_now, rx, tx])
 
 
 if __name__ == '__main__':
